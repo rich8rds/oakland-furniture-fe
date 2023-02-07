@@ -77,7 +77,7 @@ a {
 
 a:hover {
  font-size: larger;
- color: black !important;
+ color: #7e6a17 !important;
  font-weight: bolder;
  animation: color-change 2s ease-in forwards;
 }

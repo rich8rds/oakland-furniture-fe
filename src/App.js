@@ -42,6 +42,7 @@ import SubcategoryTableView from "./Admin/components/Cat_SubCat/SubcategoryTable
 import Home from "./Admin/components/Dashboard/Home";
 import { useAuth } from "./context/authcontext";
 import { EditAddress } from "./components/AddressBook/AddressBookCard";
+import AdminLogin from "./Admin/components/Login/AdminLogin";
 
 function App() {
   console.log("ROLE: "+ localStorage.getItem("role"))
@@ -146,6 +147,8 @@ function App() {
           />
           <Route path="categories/subcategories/:id/shop/products/:id" 
                   element={<SingleProduct /> } />
+
+        <Route path='/admin/login' element={<AdminLogin />} />
           
           <Route element={<RequireAdminAuth /> } >
             <Route path='/admin' element={<Layout />}>

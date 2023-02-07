@@ -5,10 +5,14 @@ import { FaShoppingCart } from "react-icons/fa";
 import { ArrowLeftTwoTone, ArrowRightTwoTone } from "@mui/icons-material";
 import SideBar from '../../components/SideBar/SideBar';
 import CheckoutCard from '../../components/CheckoutCard/CheckoutCard';
+import Modal from '../../components/Modal/Modal';
 import { useAuth } from '../../context/authcontext';
 
 const ClosedOrders = () => {
   const [screenSize, setScreenSize] = useState(window.innerWidth);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+
   const {  GetAllClosedOrders,
     closedOrders,
     closedOrdersPageNumber,
@@ -45,8 +49,8 @@ const ClosedOrders = () => {
               <div className="border-gray-300 border-b-1 py-3">
                 <h1 className='text-2xl font-bold-900'>Orders</h1>
                 <div className='mt-3'>
-                    <Link to="/open-orders">OPEN ORDERS (0)</Link>
-                    <Link to="/closed-orders" className='ml-3'>CLOSED ORDERS (0)</Link>
+                    <Link to="/open-orders" className="border-r border-black pr-3 hover:text-red-600">OPEN ORDERS</Link>
+                    <Link to="/closed-orders" className='ml-3'>CLOSED ORDERS </Link>
                 </div> 
               </div>
 
@@ -93,7 +97,18 @@ const ClosedOrders = () => {
                     <h1>Status : <span className='text-xl font-extrabold text-red-700'>Closed</span></h1>
                     <p>Transaction Id: {order.transaction.reference} <small className="text-red-700">(Please take note of this)</small></p>
                   </div> 
-              <div className='col-md-6'>
+                  {isModalOpen && (
+            <Modal onClose={toggleModal} className="">
+              <h1 className="my-3 text-3xl font-extrabold ">Order Details</h1>
+                <div>           
+                <p>Date Ordered: {dateCreatedFormatted}</p>
+                    <p>Time Ordered: {timeCreatedFormatted}</p>
+                    <p>Date Pickedup: {dateUpdatedFormatted}</p>
+                    <p>Time Pickedup: {timeUpdatedFormatted}</p>
+                    <h1>Status : <span className='text-xl font-extrabold text-red-700'>Closed</span></h1>
+                    <p>Transaction Id: {order.transaction.reference} <small className="text-red-700">(Please take note of this)</small></p>
+                </div> 
+              <div className=''>
                   <CheckoutCard title={`1. Your Order(${order.items.length} items)`} >
                     <div className='divide-y'>
                     {order.items.map((item, index) => {
@@ -115,17 +130,30 @@ const ClosedOrders = () => {
                   </CheckoutCard>
               </div> 
 
-              <div className='col-md-6'>
+              <div className=''>
                 <CheckoutCard title="2. PICKUP CENTER DETAILS">
-                    <ul className="text-lg mt-0 px-3">
-                      <li className="text-lg font-medium">- Name: {order.pickupCenter.name}</li>
-                      <li className="text-lg font-medium">- Address: {order.pickupCenter.address}</li>
-                      <li className="text-lg font-medium">- State: {order.pickupCenter.state.name}</li>
-                      <li className="text-lg font-medium">- Phone-number: {order.pickupCenter.phone}</li>
-                      <li className="text-lg font-medium">- Email: {order.pickupCenter.email}</li>
-                    </ul>  
+                  <ul className="text-lg mt-0 px-3">
+                    <li className="text-lg font-medium">- Name: {order.pickupCenter.name}</li>
+                    <li className="text-lg font-medium">- Address: {order.pickupCenter.address}</li>
+                    <li className="text-lg font-medium">- State: {order.pickupCenter.state.name}</li>
+                    <li className="text-lg font-medium">- Phone-number: {order.pickupCenter.phone}</li>
+                    <li className="text-lg font-medium">- Email: {order.pickupCenter.email}</li>
+                  </ul>  
                 </CheckoutCard>
               </div> 
+              </Modal>
+            )}
+              <ReactPaginate 
+                previousLabel={<ArrowLeftTwoTone />}
+                nextLabel={<ArrowRightTwoTone />}
+                pageCount={closedOrdersTotalPages} 
+                onPageChange={changePage}
+                containerClassName={"paginationBtns"}
+                previousLinkClassName={"prevBtn"}
+                nextLinkClassName={"nextBtn"}
+                disabledClassName={"paginationDisabled"}
+                activeClassName={"paginationActive"}
+              />
             </div>
               )
             })} 

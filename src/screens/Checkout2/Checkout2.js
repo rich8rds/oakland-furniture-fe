@@ -28,6 +28,7 @@ const Checkout2 = () => {
 
   const [pickupCenter, setPickUpCenter] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [itemInfo, setItemInfo] = useState("");
 
 
   const handleChange = (e) => {
@@ -52,6 +53,12 @@ const Checkout2 = () => {
     GetAllStatesConfig();
     GetPickupCenterByEmailConfig();
     OrderConfig();
+
+    // if(cartItems.items.length === 1){
+    //   setItemInfo(`2. Your Order (1 item)`);
+    // } else {
+    //   setItemInfo(`2. Your Order (${cartItems.items.length} items)`);
+    // }
   }, []);
 
   const orderData = {
@@ -72,8 +79,6 @@ const Checkout2 = () => {
       
   //   }
   // }, [pickupCenter]);
-
-  const number = 3;
 
   return (
     <div className='lg:mx-20 lg:pr-8 lg:pl-25 lg:pb-5 lg:pt-10 sm:mx-5'>
@@ -130,7 +135,8 @@ const Checkout2 = () => {
         </div>
 
         <div className='col-md-4'>
-            <CheckoutCard title={`2. Your Order(${number} items)`}>
+            {}
+            <CheckoutCard title={`2. Your Order (${cartItems.items.length} item(s))`}>
                 <div className='divide-y'>
                   {cartItems.items.map((item, index)  => {
                     return(

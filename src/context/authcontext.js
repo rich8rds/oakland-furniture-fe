@@ -143,8 +143,9 @@ const DataProvider = ({ children }) => {
             redirectToUserPage(location, navigate, jwtInfo.roles)
           }
           else{
+            errorNotification(res.data.message);
             setTimeout(() => {
-              window.location.href = "/login"
+              window.location.href = "/login";
             }, 1500);
           }  
         })
@@ -157,6 +158,45 @@ const DataProvider = ({ children }) => {
       errorNotification(err.response.data.message);
     }
   };
+
+
+
+  /**==============Admin Login ======= **/
+  const AdminLoginConfig = async (formData, location, navigate) => {
+    try {
+      const LoginData = {
+        email: formData.email,
+        password: formData.password,
+      };
+      await apiPost("auth/login", LoginData)
+        .then((res) => {
+          if(res.data.message === 'Login Successful'){
+            successNotification(res.data.message);
+            console.log(res.data.message);
+            const jwtInfo = decodeJwt(res.data.data);   
+            localStorage.setItem("signature", res.data.data);
+            localStorage.setItem("role", jwtInfo.roles);
+
+            setLocalStorageValue(localStorage.getItem("signature"))
+            redirectToUserPage(location, navigate, jwtInfo.roles)
+          }
+          else{
+            setTimeout(() => {
+              window.location.href = "/admin/login"
+            }, 1500);
+          }  
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+          errorNotification(err.response.data);
+        });
+    } catch (err) {
+      console.log(err.response.data.message);
+      errorNotification(err.response.data.message);
+    }
+  };
+
+
 
    /**============= Add to Cart ======= **/
     const AddToCartConfig = async (productId, data) => {
@@ -201,7 +241,7 @@ const DataProvider = ({ children }) => {
       try{
         await apiPut(`customer/cart/item/add-to-quantity/${productId}`)
           .then((res) => {
-            successNotification(res.data.message);
+            successNotification(res.data);
             const index = cartItems.items.findIndex(item=>item.product.id === productId)
             setCartItems(prev=>{
               prev.items[index].orderQty = prev.items[index].orderQty + 1
@@ -210,7 +250,7 @@ const DataProvider = ({ children }) => {
             setTimeout(() => {
               window.location.href = "/shopping-cart";
             }, 2000);
-            console.log(res.data.message);
+            console.log(res.data);
 
         })
           .catch((err) => {
@@ -227,11 +267,11 @@ const DataProvider = ({ children }) => {
       try {
       await apiPut(`customer/cart/item/reduce-quantity/${productId}`)
         .then((res) => {
-          successNotification(res.data.message);
+          successNotification(res.data);
           setTimeout(() => {
             window.location.href = "/shopping-cart";
           }, 2000);
-          console.log(res.data.message);
+          console.log(res.data);
       })
         .catch((err) => {
           console.log(err.response.data.message);
@@ -281,6 +321,13 @@ const DataProvider = ({ children }) => {
     localStorage.clear();
     window.location.href = "/login";
   };
+
+    /**==============Admin Logout ======= **/
+    const AdminLogout = () => {
+      localStorage.clear();
+      window.location.href = "/admin/login";
+    };
+  
 
   // ===================Get User========================
   const GetUser = async () => {
@@ -793,7 +840,9 @@ useEffect(() => {
           BestSelling,
           bestSelling,
           NewArrival,
-          newArrival
+          newArrival,
+          AdminLoginConfig,
+          AdminLogout
       }}
     >
       {children}

@@ -21,7 +21,7 @@ import { useAuth } from "../../../context/authcontext";
 
 const Sidebar = () => {
   const sidebarRef = useRef()
-  const { Logout } = useAuth()
+  const { AdminLogout } = useAuth()
 
   const handleNavDisplay = () => {
     sidebarRef.current.classList.toggle("sidebar-hidden")
@@ -119,7 +119,7 @@ const Sidebar = () => {
             </li>
           </Link>
 
-          <Link onClick={Logout} style={{ textDecoration: "none" }}>
+          <Link onClick={AdminLogout} style={{ textDecoration: "none" }}>
             <li className="options hover-text">
               <ExitToAppIcon className="icon" />
               <p>Logout</p>
