@@ -196,8 +196,6 @@ const DataProvider = ({ children }) => {
     }
   };
 
-
-
    /**============= Add to Cart ======= **/
     const AddToCartConfig = async (productId, data) => {
       try {
